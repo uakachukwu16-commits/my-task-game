@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Task Fun - Play & Earn Points</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;background:#f0f2f5;margin:0;padding:15px;text-align:center}
+.card{background:#fff;max-width:430px;margin:auto;padding:20px;border-radius:18px;box-shadow:0 8px 20px rgba(0,0,0,.1)}
+.points{font-size:32px;font-weight:bold;color:#00a651;margin:10px}
+button{width:95%;padding:14px;margin:8px 0;border:none;border-radius:12px;font-size:16px;font-weight:bold;background:#111;color:#fff}
+button:disabled{background:#ccc}
+.ad-box{background:#e9e9e9;border:2px dashed #999;padding:18px;margin:16px 0;border-radius:12px;font-size:13px;color:#555}
+.small{font-size:11px;color:#888}
+.limit{color:red;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>🎮 Task Fun Game</h2>
+<p class="small">FREE TO PLAY - Points are virtual for fun. No deposit needed.</p>
+
+<!-- AD 1 - TOP BANNER - PASTE YOUR ADSTERRA CODE HERE -->
+<div class="ad-box">
+  TOP AD BANNER<br>
+  <!-- Replace this text with your Adsterra/AdSense code -->
+  Your Ad Will Show Here
+</div>
+
+<div class="points">Points: <span id="score">0</span></div>
+<p>Today's tasks done: <span id="count">0</span>/5</p>
+<p id="limitMsg" class="limit"></p>
+
+<button onclick="doTask(10)" id="btn1">✅ Daily Check-in (+10)</button>
+<button onclick="doTask(20)" id="btn2">▶️ Watch Video Task (+20)</button>
+<button onclick="doTask(15)" id="btn3">❓ Trivia Task (+15)</button>
+
+<!-- AD 2 - REWARDED AD AREA -->
+<div class="ad-box">
+  REWARDED AD AREA<br>
+  <!-- This is where your video ad will play -->
+  <button style="background:#ff6600" onclick="watchAd()">📺 Watch Ad to Get +20 Bonus</button>
+  <p class="small">You earn when they watch this ad</p>
+</div>
+
+<p class="small">Game resets tomorrow. Invite friends to get more points! This game never asks for money.</p>
+<p class="small">Made with ❤️ - Hosted on GitHub Pages</p>
+</div>
+
+<script>
+// Load saved data
+let score = parseInt(localStorage.getItem('score') || '0');
+let today = new Date().toDateString();
+let lastDate = localStorage.getItem('date');
+let count = parseInt(localStorage.getItem('count') || '0');
+
+// Reset if new day
+if(lastDate !== today){
+  count = 0;
+  localStorage.setItem('date', today);
+  localStorage.setItem('count', '0');
+}
+
+document.getElementById('score').innerText = score;
+document.getElementById('count').innerText = count;
+checkLimit();
+
+function checkLimit(){
+  if(count >= 5){
+    document.getElementById('limitMsg').innerText = "Daily limit reached! Come back tomorrow.";
+    document.querySelectorAll('button').forEach(b => { if(b.id.startsWith('btn')) b.disabled = true; });
+  }
+}
+
+function doTask(pts){
+  if(count >= 5){ checkLimit(); return; }
+  score += pts;
+  count++;
+  localStorage.setItem('score', score);
+  localStorage.setItem('count', count);
+  localStorage.setItem('date', today);
+  document.getElementById('score').innerText = score;
+  document.getElementById('count').innerText = count;
+  checkLimit();
+}
+
+function watchAd(){
+  if(count >= 5){ checkLimit(); return; }
+  alert('Your real ad would play here. After ad, user gets points and you get paid.');
+  // When you add real ad, call doTask(20) after ad finishes
+  doTask(20);
+}
+</script>
+</body>
+</html>
